@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DocuForge — PDF & Image Tools</title>
+
+    <meta
+        name="description"
+        content="Professional browser-based image and PDF tools. Resize, compress, convert and optimize your files."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+            type="module"></script>
+
+    <!-- pdf-lib -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+    <!-- JSZip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="container nav">
+
+        <a href="#" class="logo" onclick="showHome()">
+            <span class="logo-mark">D</span>
+            <span>DocuForge</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="#tools">Tools</a>
+            <a href="#image-tools">Images</a>
+            <a href="#pdf-tools">PDF</a>
+            <a href="#about">About</a>
+        </nav>
+
+        <button class="nav-button" onclick="scrollToTools()">
+            Get Started
+        </button>
+
+    </div>
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero">
+    <div class="container hero-content">
+
+        <div class="hero-badge">
+            <span></span>
+            Free browser-based file tools
+        </div>
+
+        <h1>
+            Work smarter with your
+            <span>images & PDFs.</span>
+        </h1>
+
+        <p>
+            Resize, compress, convert and manage your files
+            quickly without uploading them to a server.
+        </p>
+
+        <div class="hero-actions">
+            <button class="primary-btn" onclick="openTool('compress')">
+                Compress Image
+            </button>
+
+            <button class="secondary-btn" onclick="openTool('resize')">
+                Resize Image
+            </button>
+        </div>
+
+        <div class="privacy-note">
+            🔒 Your files stay on your device.
+        </div>
+
+    </div>
+</section>
+
+
+<!-- TOOLS -->
+
+<section class="tools-section" id="tools">
+
+    <div class="container">
+
+        <div class="section-heading">
+            <span>TOOLS</span>
+            <h2>Everything you need for your files</h2>
+            <p>
+                Simple tools designed for fast and high-quality processing.
+            </p>
+        </div>
+
+
+        <!-- IMAGE TOOLS -->
+
+        <div id="image-tools">
+
+            <div class="category-title">
+                <div>
+                    <small>IMAGE TOOLS</small>
+                    <h3>Work with images</h3>
+                </div>
+            </div>
+
+            <div class="tool-grid">
+
+                <button class="tool-card" onclick="openTool('compress')">
+                    <div class="tool-icon blue">↓</div>
+                    <h4>Compress Image</h4>
+                    <p>Reduce file size while preserving image quality.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('resize')">
+                    <div class="tool-icon purple">↗</div>
+                    <h4>Resize Image</h4>
+                    <p>Change image dimensions without unnecessary quality loss.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('convert')">
+                    <div class="tool-icon orange">⇄</div>
+                    <h4>Convert Image</h4>
+                    <p>Convert JPG, PNG and WebP with high-quality output.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('optimize')">
+                    <div class="tool-icon green">✦</div>
+                    <h4>Optimize Image</h4>
+                    <p>Resize, compress and convert in one workflow.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('crop')">
+                    <div class="tool-icon pink">□</div>
+                    <h4>Crop Image</h4>
+                    <p>Crop your image with precise dimensions.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('rotate')">
+                    <div class="tool-icon cyan">↻</div>
+                    <h4>Rotate & Flip</h4>
+                    <p>Rotate and flip images without unnecessary processing.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('image-pdf')">
+                    <div class="tool-icon red">PDF</div>
+                    <h4>Image to PDF</h4>
+                    <p>Turn one or multiple images into a PDF.</p>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PDF TOOLS -->
+
+        <div id="pdf-tools" class="pdf-tools">
+
+            <div class="category-title">
+                <div>
+                    <small>PDF TOOLS</small>
+                    <h3>Manage your PDFs</h3>
+                </div>
+            </div>
+
+            <div class="tool-grid">
+
+                <button class="tool-card" onclick="openTool('merge-pdf')">
+                    <div class="tool-icon red">+</div>
+                    <h4>Merge PDF</h4>
+                    <p>Combine multiple PDF files into one.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('split-pdf')">
+                    <div class="tool-icon orange">÷</div>
+                    <h4>Split PDF</h4>
+                    <p>Extract selected pages from a PDF.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('pdf-compress')">
+                    <div class="tool-icon blue">↓</div>
+                    <h4>Compress PDF</h4>
+                    <p>Reduce PDF size where browser processing allows.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('pdf-jpg')">
+                    <div class="tool-icon purple">JPG</div>
+                    <h4>PDF to JPG</h4>
+                    <p>Convert PDF pages into high-resolution JPG images.</p>
+                </button>
+
+                <button class="tool-card" onclick="openTool('pdf-png')">
+                    <div class="tool-icon green">PNG</div>
+                    <h4>PDF to PNG</h4>
+                    <p>Render PDF pages as high-resolution PNG images.</p>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TOOL WORKSPACE -->
+
+<section class="workspace-section" id="workspace">
+
+    <div class="container">
+
+        <div class="workspace" id="workspaceBox">
+
+            <div class="workspace-header">
+
+                <button class="back-btn" onclick="closeTool()">
+                    ← Back
+                </button>
+
+                <div>
+                    <h2 id="toolTitle">Image Compressor</h2>
+                    <p id="toolDescription">
+                        Reduce image size while keeping excellent quality.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div id="toolContent"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="about" id="about">
+
+    <div class="container">
+
+        <div class="about-grid">
+
+            <div>
+                <span class="section-label">WHY DOCUFORGE</span>
+
+                <h2>
+                    Powerful file tools.
+                    <br>
+                    Without complicated software.
+                </h2>
+            </div>
+
+            <div class="features">
+
+                <div>
+                    <strong>⚡ Fast</strong>
+                    <p>Process files directly in your browser.</p>
+                </div>
+
+                <div>
+                    <strong>🔒 Private</strong>
+                    <p>Your files remain on your device.</p>
+                </div>
+
+                <div>
+                    <strong>✨ High Quality</strong>
+                    <p>Conversion uses high-quality browser rendering.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+    <div class="container footer-content">
+        <div>
+            <strong>DocuForge</strong>
+            <p>Simple tools for your files.</p>
+        </div>
+
+        <span>© 2026 DocuForge</span>
+    </div>
+</footer>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
