@@ -11,6 +11,12 @@ services:
     volumes:
       - fileforge_mysql_data:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      healthcheck:
+  test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+  interval: 10s
+  timeout: 5s
+  retries: 10
+  start_period: 30s
     networks:
       - fileforge
 
