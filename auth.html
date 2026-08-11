@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FileForge — Sign in</title>
+  <meta name="description" content="Sign in or create a FileForge account.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-brand-panel">
+      <a class="logo auth-logo" href="/">
+        <span class="logo-mark">F</span>
+        <span>FileForge</span>
+      </a>
+      <div class="auth-brand-copy">
+        <span class="hero-badge"><span></span> Secure file tools</span>
+        <h1>Work with your files.<br><span>Simply.</span></h1>
+        <p>Resize, compress, convert and manage images and PDFs from one clean workspace.</p>
+        <div class="auth-points">
+          <div><strong>⚡ Fast</strong><span>Browser-first processing</span></div>
+          <div><strong>🔒 Private</strong><span>Your files stay on your device where possible</span></div>
+          <div><strong>✨ High quality</strong><span>High-quality image rendering</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-card-wrap">
+      <div class="auth-card">
+        <div class="auth-card-head">
+          <span class="section-label">FILEFORGE ACCOUNT</span>
+          <h2 id="authTitle">Create your account</h2>
+          <p id="authSubtitle">Register to use FileForge tools.</p>
+        </div>
+
+        <div class="auth-tabs" role="tablist">
+          <button id="registerTab" class="auth-tab active" type="button">Register</button>
+          <button id="loginTab" class="auth-tab" type="button">Login</button>
+        </div>
+
+        <div id="authMessage" class="auth-message" aria-live="polite"></div>
+
+        <form id="registerForm" class="auth-form">
+          <div class="field">
+            <label for="registerName">Full name</label>
+            <input id="registerName" name="name" type="text" autocomplete="name" maxlength="100" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="registerEmail">Email</label>
+            <input id="registerEmail" name="email" type="email" autocomplete="email" maxlength="255" placeholder="you@example.com" required>
+          </div>
+          <div class="field password-field">
+            <label for="registerPassword">Password</label>
+            <div class="password-wrap">
+              <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+              <button type="button" class="password-toggle" data-target="registerPassword">Show</button>
+            </div>
+          </div>
+          <button class="action-btn auth-submit" type="submit">Create account</button>
+        </form>
+
+        <form id="loginForm" class="auth-form hidden">
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" maxlength="255" placeholder="you@example.com" required>
+          </div>
+          <div class="field password-field">
+            <label for="loginPassword">Password</label>
+            <div class="password-wrap">
+              <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+              <button type="button" class="password-toggle" data-target="loginPassword">Show</button>
+            </div>
+          </div>
+          <button class="action-btn auth-submit" type="submit">Login</button>
+        </form>
+
+        <p class="auth-privacy">By continuing, you agree to use FileForge responsibly. Your account data is stored securely by the FileForge backend.</p>
+      </div>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

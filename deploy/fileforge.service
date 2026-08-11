@@ -1,0 +1,20 @@
+[Unit]
+Description=FileForge Node.js application
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/fileforge
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node /var/www/fileforge/server.js
+Restart=always
+RestartSec=5
+
+# Give the process a reasonable file descriptor limit.
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

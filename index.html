@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>DocuForge — PDF & Image Tools</title>
+    <title>FileForge — PDF & Image Tools</title>
 
     <meta
         name="description"
@@ -33,12 +33,21 @@
 
 <body>
 
+<div id="fileProtocolNotice" style="display:none;position:fixed;inset:0;z-index:99999;background:#fff;align-items:center;justify-content:center;padding:24px;font-family:Inter,Arial,sans-serif;">
+  <div style="max-width:560px;text-align:center;border:1px solid #e5e7eb;border-radius:20px;padding:32px;box-shadow:0 18px 50px rgba(0,0,0,.08);">
+    <div style="font-size:42px;margin-bottom:12px;">🔐</div>
+    <h2 style="margin:0 0 10px;">Run FileForge through the server</h2>
+    <p style="margin:0;color:#64748b;line-height:1.6;">FileForge authentication works through the Node.js server. Do not open index.html directly with file://. Start Docker/Jenkins deployment and open FileForge through its HTTP address.</p>
+  </div>
+</div>
+<script>if(location.protocol==='file:'){document.getElementById('fileProtocolNotice').style.display='flex';}</script>
+
 <header class="header">
     <div class="container nav">
 
         <a href="#" class="logo" onclick="showHome()">
-            <span class="logo-mark">D</span>
-            <span>DocuForge</span>
+            <span class="logo-mark">F</span>
+            <span>FileForge</span>
         </a>
 
         <nav class="nav-links">
@@ -48,9 +57,10 @@
             <a href="#about">About</a>
         </nav>
 
-        <button class="nav-button" onclick="scrollToTools()">
-            Get Started
-        </button>
+        <div class="nav-account">
+            <span id="userGreeting" class="user-greeting"></span>
+            <button class="nav-button" onclick="logoutUser()">Log out</button>
+        </div>
 
     </div>
 </header>
@@ -61,6 +71,9 @@
 <!-- HERO -->
 
 <section class="hero">
+    <div class="container">
+        <div class="auth-required-note">🔐 You are signed in. Your account is required to use FileForge tools.</div>
+    </div>
     <div class="container hero-content">
 
         <div class="hero-badge">
@@ -265,7 +278,7 @@
         <div class="about-grid">
 
             <div>
-                <span class="section-label">WHY DOCUFORGE</span>
+                <span class="section-label">WHY FILEFORGE</span>
 
                 <h2>
                     Powerful file tools.
@@ -305,11 +318,11 @@
 <footer>
     <div class="container footer-content">
         <div>
-            <strong>DocuForge</strong>
+            <strong>FileForge</strong>
             <p>Simple tools for your files.</p>
         </div>
 
-        <span>© 2026 DocuForge</span>
+        <span>© 2026 FileForge</span>
     </div>
 </footer>
 

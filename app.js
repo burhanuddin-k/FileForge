@@ -1,5 +1,40 @@
+
 /* =========================================================
-   DOCUFORGE
+   AUTHENTICATION
+========================================================= */
+
+async function getCurrentUser() {
+    const response = await fetch("/api/auth/me", { credentials: "include" });
+    if (!response.ok) throw new Error("Not authenticated");
+    const data = await response.json();
+    return data.user;
+}
+
+async function logoutUser() {
+    try {
+        await fetch("/api/auth/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+    } finally {
+        window.location.href = "/";
+    }
+}
+
+async function requireAuthentication() {
+    try {
+        const user = await getCurrentUser();
+        const greeting = document.getElementById("userGreeting");
+        if (greeting) greeting.textContent = `Hi, ${user.name}`;
+        return true;
+    } catch (_) {
+        window.location.href = "/";
+        return false;
+    }
+}
+
+/* =========================================================
+   FILEFORGE
    Image + PDF Utility Platform
    No PDF Editing
 ========================================================= */
@@ -534,11 +569,11 @@ async function handleCompress(file) {
                             type="range"
                             min="50"
                             max="100"
-                            value="98"
+                            value="100"
                         >
 
                         <div class="range-value">
-                            <span id="qualityValue">98</span>%
+                            <span id="qualityValue">100</span>%
                         </div>
 
                     </div>
@@ -672,7 +707,7 @@ async function compressCurrentImage() {
 
 
         currentOutputName =
-            "docuforge-compressed." + extension;
+            "fileforge-compressed." + extension;
 
 
         showImageResult(
@@ -821,7 +856,7 @@ async function handleResize(file) {
                         type="range"
                         min="80"
                         max="100"
-                        value="98"
+                        value="100"
                     >
 
                     <div class="range-value">
@@ -982,7 +1017,7 @@ async function resizeCurrentImage() {
 
 
     currentOutputName =
-        "docuforge-resized." + extension;
+        "fileforge-resized." + extension;
 
 
     showImageResult(
@@ -1067,11 +1102,11 @@ async function handleConvert(file) {
                         </option>
 
                         <option value="image/jpeg">
-                            JPG — 98% Quality
+                            JPG — 100% Quality
                         </option>
 
                         <option value="image/webp">
-                            WebP — 98% Quality
+                            WebP — 100% Quality
                         </option>
 
                     </select>
@@ -1088,12 +1123,12 @@ async function handleConvert(file) {
                         type="range"
                         min="80"
                         max="100"
-                        value="98"
+                        value="100"
                     >
 
                     <div class="range-value">
                         <span id="convertQualityValue">
-                            98
+                            100
                         </span>%
                     </div>
 
@@ -1230,7 +1265,7 @@ async function convertCurrentImage() {
 
 
     currentOutputName =
-        "docuforge-converted." + extension;
+        "fileforge-converted." + extension;
 
 
     showImageResult(
@@ -1500,7 +1535,7 @@ async function optimizeCurrentImage() {
     currentOutputBlob = blob;
 
     currentOutputName =
-        "docuforge-optimized." + extension;
+        "fileforge-optimized." + extension;
 
 
     showImageResult(
@@ -1694,7 +1729,7 @@ async function cropCurrentImage() {
 
 
     currentOutputName =
-        "docuforge-cropped." + extension;
+        "fileforge-cropped." + extension;
 
 
     showImageResult(
@@ -1940,7 +1975,7 @@ async function downloadRotated() {
 
 
     currentOutputName =
-        "docuforge-rotated." + extension;
+        "fileforge-rotated." + extension;
 
 
     showImageResult(
@@ -2254,11 +2289,30 @@ async function createImagePDF() {
             image =
                 await pdf.embedPng(bytes);
 
-        } else {
+        } else if (file.type === "image/jpeg") {
 
             image =
                 await pdf.embedJpg(bytes);
 
+        } else if (file.type === "image/webp") {
+
+            /*
+                pdf-lib cannot directly embed WebP. Convert WebP
+                to lossless PNG at its original dimensions rather
+                than sending it through a low-quality JPEG step.
+            */
+            const webpImage = await loadImage(file);
+            const encodedPng = await encodeImage(
+                webpImage,
+                webpImage.naturalWidth,
+                webpImage.naturalHeight,
+                "image/png",
+                1
+            );
+            image = await pdf.embedPng(await encodedPng.arrayBuffer());
+
+        } else {
+            continue;
         }
 
 
@@ -2296,7 +2350,7 @@ async function createImagePDF() {
 
     downloadBlob(
         blob,
-        "docuforge-images.pdf"
+        "fileforge-images.pdf"
     );
 }
 
@@ -2422,7 +2476,7 @@ async function mergePDFs() {
             [bytes],
             {type: "application/pdf"}
         ),
-        "docuforge-merged.pdf"
+        "fileforge-merged.pdf"
     );
 }
 
@@ -2541,7 +2595,7 @@ async function splitPDF() {
             [result],
             {type: "application/pdf"}
         ),
-        "docuforge-split.pdf"
+        "fileforge-split.pdf"
     );
 }
 
@@ -2622,7 +2676,7 @@ async function compressPDF() {
             [result],
             {type: "application/pdf"}
         ),
-        "docuforge-compressed.pdf"
+        "fileforge-compressed.pdf"
     );
 }
 
@@ -2755,7 +2809,7 @@ async function convertPDFToImages() {
             await canvasToBlob(
                 canvas,
                 mime,
-                .98
+                1
             );
 
 
@@ -2774,7 +2828,7 @@ async function convertPDFToImages() {
 
     downloadBlob(
         zipBlob,
-        `docuforge-pdf-${window.pdfImageType}.zip`
+        `fileforge-pdf-${window.pdfImageType}.zip`
     );
 }
 
@@ -2785,14 +2839,11 @@ async function convertPDFToImages() {
 
 window.addEventListener(
     "DOMContentLoaded",
-    () => {
+    async () => {
 
-        /*
-            Make sure no old PDF editor code
-            is active.
-        */
-
+        /* PDF editing is intentionally not part of FileForge. */
         currentTool = null;
+        await requireAuthentication();
 
     }
 );
