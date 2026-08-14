@@ -1,60 +1,75 @@
-# FileForge
+# 🚀 FileForge — AWS + Docker + Jenkins CI/CD
 
-Professional browser-based image and PDF utility platform.
+FileForge is a web-based file management application deployed using a complete DevOps workflow.
 
-## Current stack
+This project demonstrates how to build, containerize, automate, and deploy a web application using **GitHub, Jenkins, Docker, Docker Hub, AWS EC2, Nginx, Node.js, and MySQL**.
 
-- HTML/CSS/JavaScript frontend
-- Node.js + Express backend
-- MySQL 8.4
-- Docker + Docker Compose
-- Nginx reverse proxy
-- Jenkins CI/CD
-- bcrypt password hashing
-- JWT stored in an HTTP-only cookie
+---
 
-## Authentication
+## 📌 Project Overview
 
-Registration is mandatory before using FileForge tools.
-Registration requires only:
+FileForge is deployed using a containerized architecture where:
 
-- Full name
-- Valid email address
-- Password
+- GitHub stores the source code.
+- Jenkins automatically builds the application.
+- Docker packages the application into a container.
+- Docker Hub stores the Docker image.
+- AWS EC2 hosts the application.
+- Nginx acts as a reverse proxy.
+- Node.js/Express runs the backend.
+- MySQL stores application and user/login data.
+- Docker Compose manages the complete application stack.
 
-The password is hashed with bcrypt before it is stored in MySQL.
+---
 
-## Important
+## 🏗️ Architecture
 
-Do **not** open `index.html` directly with `file://`. The login/register page is served by Express at `/` and `/login`/`/register`. Run the application through Docker or Node.js.
-
-## Local Docker run
-
-```bash
-cp .env.example .env
-nano .env
-# Set DB_PASSWORD, MYSQL_ROOT_PASSWORD and JWT_SECRET
-
-docker compose up -d --build
-docker compose ps
-curl http://127.0.0.1/api/health
-```
-
-Open `http://SERVER_IP/`.
-
-## Jenkins on EC2
-
-Jenkins should check out this repository, build the Docker image, run Docker Compose, and perform a health check. See `Jenkinsfile`.
-
-The Jenkins user must be allowed to run Docker. A common EC2 setup is:
-
-```bash
-sudo usermod -aG docker jenkins
-sudo systemctl restart jenkins
-```
-
-Treat Docker socket access as privileged access.
-
-## Production
-
-Use HTTPS before setting `COOKIE_SECURE=true`. Keep MySQL private and do not expose port 3306 in the EC2 security group.
+```text
+                         ┌─────────────────┐
+                         │     GitHub      │
+                         │  Source Code    │
+                         └────────┬────────┘
+                                  │
+                              Webhook
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │     Jenkins     │
+                         │    CI/CD        │
+                         └────────┬────────┘
+                                  │
+                         Docker Build
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │   Docker Hub    │
+                         │                 │
+                         │ FileForge Image │
+                         └────────┬────────┘
+                                  │
+                             Docker Pull
+                                  │
+                                  ▼
+                 ┌─────────────────────────────────┐
+                 │            AWS EC2              │
+                 │                                 │
+                 │   ┌─────────────────────────┐   │
+                 │   │       Nginx :80         │   │
+                 │   │    Reverse Proxy        │   │
+                 │   └────────────┬────────────┘   │
+                 │                │                │
+                 │                ▼                │
+                 │   ┌─────────────────────────┐   │
+                 │   │   FileForge App :5000   │   │
+                 │   │    Node.js / Express    │   │
+                 │   └────────────┬────────────┘   │
+                 │                │                │
+                 │                ▼                │
+                 │   ┌─────────────────────────┐   │
+                 │   │      MySQL :3306        │   │
+                 │   │     Database Server     │   │
+                 │   └────────────┬────────────┘   │
+                 │                │                │
+                 │          Docker Volume          │
+                 │                │                │
+                 └────────────────┴────────────────┘
