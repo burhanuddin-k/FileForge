@@ -13,21 +13,16 @@ pipeline {
         stage('Verify Files') {
             steps {
                 sh '''
+                    echo "Checking required files..."
+
                     test -f Dockerfile
                     test -f docker-compose.yml
                     test -f server.js
+                    test -f auth.html
+                    test -f auth.js
                     test -f schema.sql
-                    echo "All required files found."
-                '''
-            }
-        }
 
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                    docker build \
-                      -t fileforge-app:${BUILD_NUMBER} \
-                      -t fileforge-app:latest .
+                    echo "All required files found."
                 '''
             }
         }
@@ -40,10 +35,18 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy with Docker Compose') {
             steps {
                 sh '''
                     docker compose up -d --build
+                '''
+            }
+        }
+
+        stage('Check Containers') {
+            steps {
+                sh '''
+                    docker compose ps
                 '''
             }
         }
@@ -53,29 +56,38 @@ pipeline {
                 sh '''
                     sleep 10
 
-                    docker compose ps
+                    echo "Testing FileForge..."
 
                     curl -f http://localhost/ || exit 1
 
-                    echo "FileForge deployment successful!"
+                    echo "FileForge is running successfully!"
                 '''
             }
         }
     }
 
     post {
+
         always {
             sh '''
+                echo "===== Docker Compose Status ====="
+                docker compose ps || true
+
+                echo "===== Recent Logs ====="
                 docker compose logs --tail=50 || true
             '''
         }
 
         success {
-            echo 'FILEFORGE DEPLOYMENT SUCCESSFUL!'
+            echo '======================================'
+            echo ' FILEFORGE DEPLOYMENT SUCCESSFUL!'
+            echo '======================================'
         }
 
         failure {
-            echo 'FILEFORGE DEPLOYMENT FAILED!'
+            echo '======================================'
+            echo ' FILEFORGE DEPLOYMENT FAILED!'
+            echo '======================================'
         }
     }
 }
