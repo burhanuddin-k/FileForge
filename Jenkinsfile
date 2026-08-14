@@ -1,70 +1,81 @@
 pipeline {
+
     agent any
 
-    environment {
-        IMAGE_NAME = 'fileforge-app'
-        COMPOSE_PROJECT_NAME = 'fileforge'
-    }
-
     stages {
+
         stage('Checkout') {
-            steps { checkout scm }
-        }
-
-        stage('Verify files') {
             steps {
-                sh 'test -f Dockerfile'
-                sh 'test -f docker-compose.yml'
-                sh 'test -f server.js'
-                sh 'test -f auth.html'
-                sh 'test -f auth.js'
-                sh 'test -f schema.sql'
+                checkout scm
             }
         }
 
-        stage('Build Docker image') {
+        stage('Verify Files') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest .'
+                sh '''
+                    test -f Dockerfile
+                    test -f docker-compose.yml
+                    test -f server.js
+                    test -f schema.sql
+                    echo "All required files found."
+                '''
             }
         }
 
-        stage('Stop old deployment') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker compose down --remove-orphans || true'
+                sh '''
+                    docker build \
+                      -t fileforge-app:${BUILD_NUMBER} \
+                      -t fileforge-app:latest .
+                '''
+            }
+        }
+
+        stage('Stop Old Deployment') {
+            steps {
+                sh '''
+                    docker compose down --remove-orphans
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker compose up -d --build'
+                sh '''
+                    docker compose up -d --build
+                '''
             }
         }
 
-        stage('Health check') {
+        stage('Health Check') {
             steps {
-                sh 'sleep 8'
-                sh 'curl -fsS http://127.0.0.1/api/health'
+                sh '''
+                    sleep 10
+
+                    docker compose ps
+
+                    curl -f http://localhost/ || exit 1
+
+                    echo "FileForge deployment successful!"
+                '''
             }
         }
     }
 
     post {
         always {
-            sh 'docker image prune -f || true'
+            sh '''
+                docker compose logs --tail=50 || true
+            '''
         }
+
         success {
-            echo 'FileForge deployment completed successfully.'
+            echo 'FILEFORGE DEPLOYMENT SUCCESSFUL!'
         }
+
         failure {
-            sh 'docker compose logs --tail=100 || true'
+            echo 'FILEFORGE DEPLOYMENT FAILED!'
         }
-    }
-}
-stage('Deploy') {
-    steps {
-        sh '''
-            docker compose down --remove-orphans
-            docker compose up -d --build
-        '''
     }
 }
