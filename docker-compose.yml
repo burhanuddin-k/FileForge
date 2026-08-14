@@ -1,4 +1,5 @@
 services:
+
   mysql:
     image: mysql:8.4
     container_name: fileforge-mysql
@@ -15,7 +16,17 @@ services:
       - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}"
+        ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -23,6 +34,7 @@ services:
 
     networks:
       - fileforge
+
 
   app:
     build: .
@@ -43,11 +55,12 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
 
-    ports:
-      - "127.0.0.1:5000:5000"
+    expose:
+      - "5000"
 
     networks:
       - fileforge
+
 
   nginx:
     image: nginx:alpine
@@ -66,8 +79,10 @@ services:
     networks:
       - fileforge
 
+
 volumes:
   fileforge_mysql_data:
+
 
 networks:
   fileforge:
